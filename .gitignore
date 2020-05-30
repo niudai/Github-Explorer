@@ -1,0 +1,8 @@
+out
+node_modules
+*.log
+**/*.js
+/vault
+*.pdf
+*.vsix
+dist/

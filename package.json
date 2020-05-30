@@ -1,0 +1,108 @@
+{
+	"name": "github-explorer",
+	"displayName": "Github Explorer - Browse Github Repositories Instantly",
+	"description": "Github Explorer made millions github repos accessible right in vscode.",
+	"version": "0.1.1",
+	"publisher": "niudai",
+	"preview": true,
+	"keywords": [
+		"github",
+		"explorer",
+		"remote",
+		"github explorer"
+	],
+	"repository": {
+		"url": "",
+		"type": "git"
+	},
+	"engines": {
+		"vscode": "^1.32.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onFileSystem:github",
+		"onCommand:github-explorer.mount",
+		"onCommand:github-explorer.init",
+		"onCommand:github-explorer.login",
+		"onCommand:github-explorer.logout"
+	],
+	"main": "./dist/extension.js",
+	"icon": "res/icon.png",
+	"contributes": {
+		"commands": [
+			{
+				"command": "github-explorer.mount",
+				"title": "Setup Workspace",
+				"category": "Github Explorer"
+			},
+			{
+				"command": "github-explorer.init",
+				"title": "Open Github Repository",
+				"category": "Github Explorer"
+			},
+			{
+				"command": "github-explorer.login",
+				"title": "Sign in to Github",
+				"category": "Github Explorer"
+			},
+			{
+				"command": "github-explorer.logout",
+				"title": "Sign out from Github",
+				"category": "Github Explorer"
+			}
+		],
+		"menus": {
+			"commandPalette": [
+				{
+					"command": "github-explorer.mount",
+					"when": "workbenchState != workspace"
+				},
+				{
+					"command": "github-explorer.init",
+					"when": "workbenchState == workspace"
+				}
+			]
+		},
+		"configuration": {
+			"title": "Github Explorer",
+			"properties": {
+				"github-explorer.useSyncLoad": {
+					"type": "boolean",
+					"default": false,
+					"description": "asynchronous http requesting would make repo loading faster, but prone to be detected as robot. Set this true makes loading synchronous, which would slower loading process, but makes it more robust to robot detection. "
+				},
+				"github-explorer.maxRequestTimesPerOpen": {
+					"type": "number",
+					"default": 1000,
+					"description": "The max number of request time every repo opening. If set too large, nework & performance issues may occur."
+				},
+				"github-explorer.keystorePath": {
+					"type": "string",
+					"default": "",
+					"description": "You can provide your own keystore file path. The file must contains only <username>:<password> or <username>:<personal access token>"
+				}
+			}
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "webpack --mode production",
+		"develop": "webpack --mode development --watch",
+		"compile": "tsc -p ./",
+		"lint": "tslint -p ./",
+		"watch": "tsc -watch -p ./"
+	},
+	"devDependencies": {
+		"@types/node": "^12.12.0",
+		"@types/vscode": "^1.32.0",
+		"ts-loader": "^7.0.5",
+		"tslint": "^5.19.0",
+		"typescript": "^3.8.3",
+		"webpack": "^4.43.0",
+		"webpack-cli": "^3.3.11"
+	},
+	"dependencies": {
+		"axios": "^0.19.2"
+	}
+}

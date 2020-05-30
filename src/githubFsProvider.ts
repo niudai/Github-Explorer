@@ -149,8 +149,8 @@ export async function initGithubFS(memFs: MemFS) {
 
         var bigFolderNotif: boolean = false;
         var exceedMaxFolderNotif: boolean = false;
-        var maxRequestTime: number | undefined= vscode.workspace.getConfiguration('github-explorer').get(SettingEnum.maxRequestTimesPerOpen);
-        var useSyncLoad: boolean | undefined = vscode.workspace.getConfiguration('github-explorer').get(SettingEnum.useSyncLoad);
+        var maxRequestTime: number | undefined= vscode.workspace.getConfiguration('remote-github').get(SettingEnum.maxRequestTimesPerOpen);
+        var useSyncLoad: boolean | undefined = vscode.workspace.getConfiguration('remote-github').get(SettingEnum.useSyncLoad);
 
         async function _writeTree(_tree: GithubTree, rootPath: string) {
             for (let t of _tree.tree) {

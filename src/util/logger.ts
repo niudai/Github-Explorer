@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-const channel = vscode.window.createOutputChannel('Github Explorer');
+const channel = vscode.window.createOutputChannel('Remote - Github');
 
 export function Output(str: string, level?: string) {
     if (level) {

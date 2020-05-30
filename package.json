@@ -1,15 +1,14 @@
 {
-	"name": "github-explorer",
-	"displayName": "Github Explorer - Browse Github Repositories Instantly",
-	"description": "Github Explorer made millions github repos accessible right in vscode.",
+	"name": "remote-github",
+	"displayName": "Remote - Github",
+	"description": "Open any folder of any remote Github Repository and take advantage of Visual Studio Code's full feature set.",
 	"version": "0.1.1",
 	"publisher": "niudai",
 	"preview": true,
 	"keywords": [
 		"github",
-		"explorer",
 		"remote",
-		"github explorer"
+		"remote-github"
 	],
 	"repository": {
 		"url": "https://github.com/niudai/Github-Explorer",
@@ -23,62 +22,62 @@
 	],
 	"activationEvents": [
 		"onFileSystem:github",
-		"onCommand:github-explorer.mount",
-		"onCommand:github-explorer.init",
-		"onCommand:github-explorer.login",
-		"onCommand:github-explorer.logout"
+		"onCommand:remote-github.mount",
+		"onCommand:remote-github.init",
+		"onCommand:remote-github.login",
+		"onCommand:remote-github.logout"
 	],
 	"main": "./dist/extension.js",
 	"icon": "res/icon.png",
 	"contributes": {
 		"commands": [
 			{
-				"command": "github-explorer.mount",
+				"command": "remote-github.mount",
 				"title": "Setup Workspace",
-				"category": "Github Explorer"
+				"category": "Remote - Github"
 			},
 			{
-				"command": "github-explorer.init",
+				"command": "remote-github.init",
 				"title": "Open Github Repository",
-				"category": "Github Explorer"
+				"category": "Remote - Github"
 			},
 			{
-				"command": "github-explorer.login",
+				"command": "remote-github.login",
 				"title": "Sign in to Github",
-				"category": "Github Explorer"
+				"category": "Remote - Github"
 			},
 			{
-				"command": "github-explorer.logout",
+				"command": "remote-github.logout",
 				"title": "Sign out from Github",
-				"category": "Github Explorer"
+				"category": "Remote - Github"
 			}
 		],
 		"menus": {
 			"commandPalette": [
 				{
-					"command": "github-explorer.mount",
+					"command": "remote-github.mount",
 					"when": "workbenchState != workspace"
 				},
 				{
-					"command": "github-explorer.init",
+					"command": "remote-github.init",
 					"when": "workbenchState == workspace"
 				}
 			]
 		},
 		"configuration": {
-			"title": "Github Explorer",
+			"title": "Remote - Github",
 			"properties": {
-				"github-explorer.useSyncLoad": {
+				"remote-github.useSyncLoad": {
 					"type": "boolean",
 					"default": false,
 					"description": "asynchronous http requesting would make repo loading faster, but prone to be detected as robot. Set this true makes loading synchronous, which would slower loading process, but makes it more robust to robot detection. "
 				},
-				"github-explorer.maxRequestTimesPerOpen": {
+				"remote-github.maxRequestTimesPerOpen": {
 					"type": "number",
 					"default": 1000,
 					"description": "The max number of request time every repo opening. If set too large, nework & performance issues may occur."
 				},
-				"github-explorer.keystorePath": {
+				"remote-github.keystorePath": {
 					"type": "string",
 					"default": "",
 					"description": "You can provide your own keystore file path. The file must contains only <username>:<password> or <username>:<personal access token>"

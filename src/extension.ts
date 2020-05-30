@@ -13,19 +13,19 @@ export function activate(context: vscode.ExtensionContext) {
     const githubFs = new MemFS();
     context.subscriptions.push(vscode.workspace.registerFileSystemProvider('github', githubFs, { isCaseSensitive: true }));
 
-    context.subscriptions.push(vscode.commands.registerCommand('github-explorer.login', _ => {
+    context.subscriptions.push(vscode.commands.registerCommand('remote-github.login', _ => {
         login()
     }))
 
-    context.subscriptions.push(vscode.commands.registerCommand('github-explorer.logout', _ => {
+    context.subscriptions.push(vscode.commands.registerCommand('remote-github.logout', _ => {
         logout()
     }))
 
-    context.subscriptions.push(vscode.commands.registerCommand('github-explorer.init', _ => {
+    context.subscriptions.push(vscode.commands.registerCommand('remote-github.init', _ => {
         initGithubFS(githubFs);
     }));
 
-    context.subscriptions.push(vscode.commands.registerCommand('github-explorer.mount', _ => {
+    context.subscriptions.push(vscode.commands.registerCommand('remote-github.mount', _ => {
         vscode.workspace.updateWorkspaceFolders(0, 0, { uri: vscode.Uri.parse('github:/'), name: "Github" });
     }));
 }

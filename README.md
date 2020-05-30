@@ -1,8 +1,8 @@
-<h1 align="center"> Github Explorer </h1>
+<h1 align="center"> Remote - Github </h1>
 
-[![](https://vsmarketplacebadge.apphb.com/version-short/niudai.github-explorer.svg)](https://marketplace.visualstudio.com/items?itemName=niudai.vscode-zhihu)
-[![](https://vsmarketplacebadge.apphb.com/downloads-short/niudai.github-explorer.svg)](https://marketplace.visualstudio.com/items?itemName=niudai.vscode-zhihu)
-[![](https://vsmarketplacebadge.apphb.com/rating-short/niudai.github-explorer.svg)](https://marketplace.visualstudio.com/items?itemName=niudai.vscode-zhihu)
+[![](https://vsmarketplacebadge.apphb.com/version-short/niudai.remote-github.svg)](https://marketplace.visualstudio.com/items?itemName=niudai.vscode-zhihu)
+[![](https://vsmarketplacebadge.apphb.com/downloads-short/niudai.remote-github.svg)](https://marketplace.visualstudio.com/items?itemName=niudai.vscode-zhihu)
+[![](https://vsmarketplacebadge.apphb.com/rating-short/niudai.remote-github.svg)](https://marketplace.visualstudio.com/items?itemName=niudai.vscode-zhihu)
 
 <h2 align="center" margin="auto 0">
   <img src="https://pic4.zhimg.com/80/v2-5fb9e9776207d111993e3460f3bf6b11.png" alt="vscode-zhihu logo" width="200px" /></a>
@@ -12,8 +12,8 @@
 <a href="https://github.com/niudai/VSCode-Zhihu"> Browse Github Repositories Instantly Without Cloning</a>
 </h2> 
 
-- [Why Github Explorer](#why-github-explorer)
-- [How to use Github Explorer](#how-to-use-github-explorer)
+- [Why Remote - Github](#why-remote-github)
+- [How to use Remote - Github](#how-to-use-remote-github)
   - [Authentication](#authentication)
     - [Provide your own keystore path](#provide-your-own-keystore-path)
   - [Setup Github To Workspace](#setup-github-to-workspace)
@@ -25,7 +25,7 @@
   - [Design Philosophy](#design-philosophy)
 - [Configurations](#configurations)
 
-## Why Github Explorer
+## Why Remote - Github
 
 How to browse github repository in VSCode?
 
@@ -33,15 +33,15 @@ Usually we need to `git clone` the whole git repo to our local file systems, eve
 
 That's really a waste of time and resource, especially when network is slow and the repo contains so many git big binary objects.
 
-*Github Explorer* made **opening a remote github repo as easy as open a local folder**, you don't have to download anything to your local file system.
+*Remote - Github* made **opening a remote github repo as easy as open a local folder**, you don't have to download anything to your local file system.
 
-## How to use Github Explorer
+## How to use Remote - Github
 
-Using Github Explorer cannot be easier, all you need is to sign in, and browse.
+Using Remote - Github cannot be easier, all you need is to sign in, and browse.
 
 ### Authentication
 
-Invoke command `Github Explorer: Sign In` through command palette, type in your github username first:
+Invoke command `Remote - Github: Sign In` through command palette, type in your github username first:
 
 ![Image](https://pic4.zhimg.com/80/v2-6b66d4a91b7eb9479f78ccb79044ff49.png)
 
@@ -63,7 +63,7 @@ If you want **higher security level**, you could provide your own path of file w
 
 ![Image](https://pic4.zhimg.com/80/v2-3c190af9c839f3e15da5ad1cfb3c71c3.png)
 
-And paste absolute path to `Github Explorer: Keystore Path` in VSCode Settings UI:
+And paste absolute path to `Remote - Github: Keystore Path` in VSCode Settings UI:
 
 ![Image](https://pic4.zhimg.com/80/v2-3c1f45a586ffcda859ae65aaf32abfbd.png)
 
@@ -71,13 +71,13 @@ And paste absolute path to `Github Explorer: Keystore Path` in VSCode Settings U
 
 ### Setup Github To Workspace
 
-Invoke `Github Explorer: Setup Workspace` to mount github folder to your workspace, after which you would see a folder named `Github` appeared in your workspace:
+Invoke `Remote - Github: Setup Workspace` to mount github folder to your workspace, after which you would see a folder named `Github` appeared in your workspace:
 
 ![Image](https://pic4.zhimg.com/80/v2-c41502d51fbadd80aa98c8246c87d8ca.png)
 
 ### Open Repository
 
-Invoke `Github Explorer: Open Github Repository`, you would see this popup:
+Invoke `Remote - Github: Open Github Repository`, you would see this popup:
 
 ![Image](https://pic4.zhimg.com/80/v2-fd6c64208c0573df47a3de445a642e1c.png)
 
@@ -125,7 +125,7 @@ Just right click any folder or files, and click download.
 
 ### Open Different Snapshot
 
-*Github Explorer* seems ignore the "git things": branches, commits, tags...
+*Remote - Github* seems ignore the "git things": branches, commits, tags...
 
 But it's not.
 
@@ -161,6 +161,6 @@ Open big repository like `torvalds/linux`, `microsoft/vscode` from root folder w
 
 | Config        | Effect           | 
 | :-------------: |:-------------:| 
-| Github Explorer: Max Request Times Per Open  | The max number of request time every repo opening. If set too large, nework & performance issues may occur. |
+| Remote - Github: Max Request Times Per Open  | The max number of request time every repo opening. If set too large, nework & performance issues may occur. |
 |Github: Use Sync Load    | Asynchronous https requesting would make repo loading faster, but prone to be detected as robot. Set this true makes loading synchronous, which would slower loading process, but makes it more robust to robot detection.     | 
-| Github Explorer: Keystore Path | Instead of type in username and authentication string manually, you can provide the absolute path of your own file which contains \<username\>:\<password\> or \<username\>:\<private access token\>.
+| Remote - Github: Keystore Path | Instead of type in username and authentication string manually, you can provide the absolute path of your own file which contains \<username\>:\<password\> or \<username\>:\<private access token\>.

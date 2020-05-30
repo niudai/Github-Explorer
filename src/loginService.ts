@@ -21,7 +21,7 @@ export function getKeyString() {
 }
 
 export async function loadKeyString() {
-    var userKeystorePath: string | undefined= vscode.workspace.getConfiguration('github-explorer').get(SettingEnum.keystorePath);
+    var userKeystorePath: string | undefined= vscode.workspace.getConfiguration('remote-github').get(SettingEnum.keystorePath);
     keystorePath = join(getExtensionPath(), 'vault/keystore.json')
     keystoreDir = join(getExtensionPath(), 'vault');    
     if (!userKeystorePath || userKeystorePath.length == 0) {

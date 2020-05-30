@@ -1,4 +1,4 @@
-<h1 align="center"> Github Explorer </h1>
+<h1 align="center"> Remote - Github </h1>
 
 <h2 align="center" margin="auto 0">
   <img src="https://pic4.zhimg.com/80/v2-5fb9e9776207d111993e3460f3bf6b11.png" alt="vscode-zhihu logo" width="200px" /></a>
@@ -8,8 +8,8 @@
 <a href="https://github.com/niudai/VSCode-Zhihu"> 无需 Clone，即刻浏览</a>
 </h2> 
 
-- [什么是 Github Explorer](#什么是-github-explorer)
-- [怎么用 Github Explorer](#怎么用-github-explorer)
+- [什么是 Remote - Github](#什么是-remote-github)
+- [怎么用 Remote - Github](#怎么用-remote-github)
   - [认证](#认证)
     - [提供 keystore path （可选）](#提供-keystore-path-可选)
   - [准备工作区](#准备工作区)
@@ -21,21 +21,21 @@
   - [设计哲学](#设计哲学)
 - [Configurations](#configurations)
 
-## 什么是 Github Explorer
+## 什么是 Remote - Github
 
 如果我们要在本地浏览一个 Github 仓库，我们常常需要将整个仓库克隆下来，而很多时候，你只是希望浏览一个子文件夹而已，或者获取某个文件，这时，将整个 Git 仓库 clone 到本地就显得十分笨重，更何况，Git 仓库不仅包含了源码，还包含了所有的源码修改记录。
 
-*Github Explorer* 彻底解决了上述的问题，它让 **浏览远程的 Github 仓库就和浏览本地文件夹一样轻松**, 无需将任何东西载到本地，但却可以像本地文件一样编辑，同样也可按需下载至本地。
+*Remote - Github* 彻底解决了上述的问题，它让 **浏览远程的 Github 仓库就和浏览本地文件夹一样轻松**, 无需将任何东西载到本地，但却可以像本地文件一样编辑，同样也可按需下载至本地。
 
 ![Image](https://pic4.zhimg.com/80/v2-a572ecb81ceac64d1308e500faa88099.gif)
 
-## 怎么用 Github Explorer 
+## 怎么用 Remote - Github 
 
-使用 *Github Explorer* 非常容易，只需简单的登录验证，即可浏览无数 Github 仓库。
+使用 *Remote - Github* 非常容易，只需简单的登录验证，即可浏览无数 Github 仓库。
 
 ### 认证
 
-通过 `Ctrl + Shift + p` 唤醒命令行面板，搜索 `Github Explorer: Sign In` 命令, 按回车，输入 Github 用户名：
+通过 `Ctrl + Shift + p` 唤醒命令行面板，搜索 `Remote - Github: Sign In` 命令, 按回车，输入 Github 用户名：
 
 ![Image](https://pic4.zhimg.com/80/v2-6b66d4a91b7eb9479f78ccb79044ff49.png)
 
@@ -57,7 +57,7 @@
 
 ![Image](https://pic4.zhimg.com/80/v2-3c190af9c839f3e15da5ad1cfb3c71c3.png)
 
-然后将这个文件的绝对路径输入到 `Github Explorer: Keystore Path` 配置项中:
+然后将这个文件的绝对路径输入到 `Remote - Github: Keystore Path` 配置项中:
 
 ![Image](https://pic4.zhimg.com/80/v2-3c1f45a586ffcda859ae65aaf32abfbd.png)
 
@@ -65,13 +65,13 @@
 
 ### 准备工作区
 
-唤醒 `Github Explorer: Setup Workspace` 命令，你会看到 `Github` 文件夹出现在你的工作区:
+唤醒 `Remote - Github: Setup Workspace` 命令，你会看到 `Github` 文件夹出现在你的工作区:
 
 ![Image](https://pic4.zhimg.com/80/v2-c41502d51fbadd80aa98c8246c87d8ca.png)
 
 ### 打开远程仓库
 
-唤醒 `Github Explorer: Open Github Repository`:
+唤醒 `Remote - Github: Open Github Repository`:
 
 ![Image](https://pic4.zhimg.com/80/v2-fd6c64208c0573df47a3de445a642e1c.png)
 
@@ -117,7 +117,7 @@
 
 ### 分支和标签
 
-*Github Explorer* 默认打开的 master 分支，但是也可以打开其它分支或标签：
+*Remote - Github* 默认打开的 master 分支，但是也可以打开其它分支或标签：
 
 如果你想打开 `golang/go` 仓库的 `dev.link` 分支，输入:
 
@@ -149,6 +149,6 @@ torvalds/linux -t v5.6
 
 | Config        | Effect           | 
 | :-------------: |:-------------:| 
-| Github Explorer: Max Request Times Per Open  | 每次开启项目最多的请求次数，默认为 1000，设置过大会遇到网络 & 性能问题。|
+| Remote - Github: Max Request Times Per Open  | 每次开启项目最多的请求次数，默认为 1000，设置过大会遇到网络 & 性能问题。|
 |Github: Use Sync Load    | 异步加载更快，但也有更大概率被检测为机器人，使用同步加载用更慢的加载速度换取更稳定的加载。    | 
-| Github Explorer: Keystore Path | 存储有 \<username\>:\<password\> or \<username\>:\<private access token\> 的绝对路径，提供之后无需手动登录。
+| Remote - Github: Keystore Path | 存储有 \<username\>:\<password\> or \<username\>:\<private access token\> 的绝对路径，提供之后无需手动登录。

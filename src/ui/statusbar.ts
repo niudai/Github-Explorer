@@ -15,7 +15,7 @@ export class StatusbarUi {
 
     public static Init() {
         StatusbarUi.Working("loading...");
-        setTimeout(function() {
+        setTimeout(() => {
             StatusbarUi.Online();
         }, 1200);
     }
@@ -42,5 +42,6 @@ export class StatusbarUi {
         StatusbarUi.statusbar.dispose();
     }
 
+    // tslint:disable-next-line: variable-name
     private static _statusBarItem: StatusBarItem;
 }

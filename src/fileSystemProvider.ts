@@ -7,6 +7,10 @@ import * as path from "path";
 import * as vscode from "vscode";
 import { Output } from "./util/logger";
 
+// tslint:disable: max-classes-per-file
+// tslint:disable: variable-name
+// tslint:disable: max-line-length
+
 export class File implements vscode.FileStat {
 
     public type: vscode.FileType;
@@ -52,13 +56,14 @@ export class MemFS implements vscode.FileSystemProvider {
 
     public root = new Directory("");
 
-    public readonly onDidChangeFile: vscode.Event<vscode.FileChangeEvent[]> = this._emitter.event;
-
     // --- manage file events
 
     private _emitter = new vscode.EventEmitter<vscode.FileChangeEvent[]>();
     private _bufferedEvents: vscode.FileChangeEvent[] = [];
     private _fireSoonHandle?: NodeJS.Timer;
+
+    // tslint:disable-next-line: member-ordering
+    public readonly onDidChangeFile: vscode.Event<vscode.FileChangeEvent[]> = this._emitter.event;
 
     // --- manage file metadata
 
@@ -170,6 +175,7 @@ export class MemFS implements vscode.FileSystemProvider {
 
     public watch(_resource: vscode.Uri): vscode.Disposable {
         // ignore, fires for all changes...
+        // tslint:disable-next-line: no-empty
         return new vscode.Disposable(() => { });
     }
 

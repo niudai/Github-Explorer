@@ -11,6 +11,7 @@ export function activate(context: vscode.ExtensionContext) {
     setContext(context);
     loadKeyString();
     const githubFs = new MemFS();
+    // tslint:disable-next-line: max-line-length
     context.subscriptions.push(vscode.workspace.registerFileSystemProvider("github", githubFs, { isCaseSensitive: true }));
 
     context.subscriptions.push(vscode.commands.registerCommand("remote-github.login", (_) => {

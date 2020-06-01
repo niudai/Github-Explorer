@@ -21,10 +21,11 @@ export function getKeyString() {
 }
 
 export async function loadKeyString() {
-    let userKeystorePath: string | undefined = vscode.workspace.getConfiguration("remote-github").get(SettingEnum.keystorePath);
+    // tslint:disable-next-line: max-line-length
+    const userKeystorePath: string | undefined = vscode.workspace.getConfiguration("remote-github").get(SettingEnum.keystorePath);
     keystorePath = join(getExtensionPath(), "vault/keystore.json");
     keystoreDir = join(getExtensionPath(), "vault");
-    if (!userKeystorePath || userKeystorePath.length == 0) {
+    if (!userKeystorePath || userKeystorePath.length === 0) {
         Keystring = fs.readFileSync(keystorePath, { encoding: "utf8"});
     } else {
         Keystring = `Basic ${new Buffer(fs.readFileSync(userKeystorePath)).toString("base64")}`;
@@ -51,17 +52,17 @@ export async function login() {
     }
     const username: string | undefined = await vscode.window.showInputBox({
         ignoreFocusOut: true,
-        prompt: "type in your github username:",
         placeHolder: "",
+        prompt: "type in your github username:",
     });
 
     if (!username) { return; }
 
     const password: string | undefined = await vscode.window.showInputBox({
         ignoreFocusOut: true,
-        prompt: "type in your password or security token:",
-        placeHolder: "",
         password: true,
+        placeHolder: "",
+        prompt: "type in your password or security token:",
     });
 
     StatusbarUi.Working("Loging in...");

@@ -3,6 +3,8 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
+// tslint:disable: max-line-length
+
 import * as vscode from "vscode";
 import { SettingEnum } from "./const/ENUM";
 import { MemFS } from "./fileSystemProvider";
@@ -38,12 +40,12 @@ export async function initGithubFS(memFs: MemFS) {
     const mainReg = /(https:\/\/github.com\/)?([^\s]+)/i;
     const branchReg = /-b[\s]+([^\s]+)/;
     const tagReg = /-t[\s]+([^\s]+)/;
-    let matchArr;
+    const matchArr = queryUrl.match(mainReg);
     let repoPath: string;
     let tmpPath = "github:/";
     let branch: string;
     let tag: string;
-    if ((matchArr = queryUrl.match(mainReg)) && matchArr.length > 2) {
+    if (matchArr && matchArr.length > 2) {
         // repoPath is like 'microsoft/vscode'
         repoPath = matchArr[2];
 
@@ -64,11 +66,11 @@ export async function initGithubFS(memFs: MemFS) {
         });
         // branchArr is like ['-b master', 'mater', index: 14, input: 'microsoft/vscode -b master']
         {
-            let branchArr;
-            let tagArr;
-            if ((branchArr = queryUrl.match(branchReg)) && branchArr.length > 1) {
+            const branchArr = queryUrl.match(branchReg);
+            const tagArr = queryUrl.match(tagReg);
+            if (branchArr && branchArr.length > 1) {
                 branch = branchArr[1];
-            } else if ((tagArr = queryUrl.match(tagReg)) && tagArr.length > 1) {
+            } else if (tagArr && tagArr.length > 1) {
                 tag = tagArr[1];
             }
         }
@@ -111,24 +113,24 @@ export async function initGithubFS(memFs: MemFS) {
         // select sub folder:
         for (;;) {
             const selectedItem = await vscode.window.showQuickPick<vscode.QuickPickItem & { item?: Tree}>(
-                [{ label: ".", picked: true , item: tree.tree[0] }, {
-                    label: "..", picked: false, item: tree.tree[0],
-                }].concat(tree.tree.map((t) => ({ label: (t.type == "blob") ? `📄${t.path}` : `📂${t.path}`, picked: false, item: t }))),
+                [{ item: tree.tree[0], label: ".", picked: true }, {
+                    item: tree.tree[0], label: "..", picked: false,
+                }].concat(tree.tree.map((t) => ({ label: (t.type === "blob") ? `📄${t.path}` : `📂${t.path}`, picked: false, item: t }))),
                 { placeHolder: tmpPath, ignoreFocusOut: true  },
             );
 
             if (!selectedItem) { return; }
 
-            if (selectedItem.label == ".") {
+            if (selectedItem.label === ".") {
                 break;
-            } else if (selectedItem.label == "..") {
+            } else if (selectedItem.label === "..") {
                 memFs.delete(vscode.Uri.parse(tmpPath));
                 if (tree.parent) {
                     tree = tree.parent;
                     tmpPath = tmpPath.slice(0, tmpPath.length - 1);
                     tmpPath = tmpPath.slice(0, tmpPath.lastIndexOf("/") + 1);
                 }
-            } else if (selectedItem.item?.type == "blob") {
+            } else if (selectedItem.item?.type === "blob") {
                 tmpPath = `${tmpPath}${selectedItem.item.path}`;
                 request(selectedItem.item.url).then((r) => {
                     const blob: GithubBlob = r.data;
@@ -136,7 +138,7 @@ export async function initGithubFS(memFs: MemFS) {
                     memFs.writeFile(vscode.Uri.parse(tmpPath), buf, { create: true, overwrite: true });
                 });
                 return;
-            } else if (selectedItem.item?.type == "tree") {
+            } else if (selectedItem.item?.type === "tree") {
                 tmpPath = `${tmpPath}${selectedItem.item.path}/`;
                 memFs.createDirectory(vscode.Uri.parse(tmpPath));
                     // if tree, load tree again
@@ -151,10 +153,10 @@ export async function initGithubFS(memFs: MemFS) {
         const maxRequestTime: number | undefined = vscode.workspace.getConfiguration("remote-github").get(SettingEnum.maxRequestTimesPerOpen);
         const useSyncLoad: boolean | undefined = vscode.workspace.getConfiguration("remote-github").get(SettingEnum.useSyncLoad);
 
-        async function _writeTree(_tree: GithubTree, rootPath: string) {
-            for (const t of _tree.tree) {
+        async function _writeTree(githubTree: GithubTree, rootPath: string) {
+            for (const t of githubTree.tree) {
                 const fname = t.path;
-                if (t.type == "blob") {
+                if (t.type === "blob") {
                     count++;
                     if (count > 300) {
                         if (!bigFolderNotif) {
@@ -177,13 +179,13 @@ export async function initGithubFS(memFs: MemFS) {
                         memFs.writeFile(vscode.Uri.parse(`${rootPath}${fname}`), buf, { create: true, overwrite: true });
                     }).catch(async (e) => {
                         const limits = await getLimits();
-                        if (limits.resources.core.limit == 0) {
+                        if (limits.resources.core.limit === 0) {
                             Output(`It seems that your request times were used up. You could request after${limits.resources.core.reset}`);
                         } else {
                             Output(`It seems github has detected you are requesting resources too frequently...pls do it later.`);
                         }
                     });
-                } else if (t.type == "tree") {
+                } else if (t.type === "tree") {
                     let folderPath;
                     // if (rootPath == '' || !rootPath) {
                     //     folderPath = `${rootPath}${t.path}/`;
@@ -193,12 +195,12 @@ export async function initGithubFS(memFs: MemFS) {
                     memFs.createDirectory(vscode.Uri.parse(folderPath));
                     if (useSyncLoad) {
                         const r = (await request(t.url)).data;
-                        const tree: GithubTree = r;
-                        await _writeTree(tree, `${rootPath}${t.path}/`);
+                        const gtree: GithubTree = r;
+                        await _writeTree(gtree, `${rootPath}${t.path}/`);
                     } else {
                         request(t.url).then((r) => {
-                            const tree: GithubTree = r.data;
-                            _writeTree(tree, `${rootPath}${t.path}/`);
+                            const gtree: GithubTree = r.data;
+                            _writeTree(gtree, `${rootPath}${t.path}/`);
                         });
                     }
                 }

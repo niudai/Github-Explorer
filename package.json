@@ -27,7 +27,7 @@
 		"onCommand:remote-github.login",
 		"onCommand:remote-github.logout"
 	],
-	"main": "./dist/extension.js",
+	"main": "./out/extension.js",
 	"icon": "res/icon.png",
 	"contributes": {
 		"commands": [

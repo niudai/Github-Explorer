@@ -1,16 +1,16 @@
 import * as path from "path";
-import * as vscode from 'vscode';
-import { Output } from './logger';
+import * as vscode from "vscode";
+import { Output } from "./logger";
 
-var context: vscode.ExtensionContext;
+let context: vscode.ExtensionContext;
 
 export function setContext(c: vscode.ExtensionContext) {
-    Output('set context')
+    Output("set context");
     context = c;
 }
 
 export function getExtensionPath() {
-    return context ? context.extensionPath : path.join(__dirname, '../../') ;
+    return context ? context.extensionPath : path.join(__dirname, "../../") ;
 }
 
 export function getSubscriptions() {

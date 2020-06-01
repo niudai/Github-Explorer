@@ -1,20 +1,20 @@
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 
-const channel = vscode.window.createOutputChannel('Remote - Github');
+const channel = vscode.window.createOutputChannel("Remote - Github");
 
 export function Output(str: string, level?: string) {
     if (level) {
         switch (level) {
-            case 'warn': 
+            case "warn":
                 vscode.window.showWarningMessage(str);
                 break;
-            case 'info': 
+            case "info":
                 vscode.window.showInformationMessage(str);
                 break;
-            case 'error': 
+            case "error":
                 vscode.window.showErrorMessage(str);
                 break;
-        }        
+        }
     }
     channel.appendLine(str);
 }

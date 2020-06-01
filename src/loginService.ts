@@ -1,53 +1,53 @@
-import Axios from 'axios';
-import * as fs from 'fs';
-import { join } from 'path';
-import * as vscode from 'vscode';
-import { DefaultHeader } from './const/HTTP';
-import { getExtensionPath } from './util/global';
-import { Output } from './util/logger';
-import { request } from './util/request';
-import { GithubProfile } from './type/github';
-import { StatusbarUi } from './ui/statusbar';
-import { SettingEnum } from './const/ENUM';
+import Axios from "axios";
+import * as fs from "fs";
+import { join } from "path";
+import * as vscode from "vscode";
+import { SettingEnum } from "./const/ENUM";
+import { DefaultHeader } from "./const/HTTP";
+import { GithubProfile } from "./type/github";
+import { StatusbarUi } from "./ui/statusbar";
+import { getExtensionPath } from "./util/global";
+import { Output } from "./util/logger";
+import { request } from "./util/request";
 
-var Keystring: string;
+let Keystring: string;
 
-var keystorePath: string;
-var keystoreDir: string;
+let keystorePath: string;
+let keystoreDir: string;
 
 // todo: load keystring from persistent
 export function getKeyString() {
-    return Keystring ? Keystring : '';
+    return Keystring ? Keystring : "";
 }
 
 export async function loadKeyString() {
-    var userKeystorePath: string | undefined= vscode.workspace.getConfiguration('remote-github').get(SettingEnum.keystorePath);
-    keystorePath = join(getExtensionPath(), 'vault/keystore.json')
-    keystoreDir = join(getExtensionPath(), 'vault');    
+    let userKeystorePath: string | undefined = vscode.workspace.getConfiguration("remote-github").get(SettingEnum.keystorePath);
+    keystorePath = join(getExtensionPath(), "vault/keystore.json");
+    keystoreDir = join(getExtensionPath(), "vault");
     if (!userKeystorePath || userKeystorePath.length == 0) {
-        Keystring = fs.readFileSync(keystorePath, { encoding: 'utf8'});
+        Keystring = fs.readFileSync(keystorePath, { encoding: "utf8"});
     } else {
-        Keystring = `Basic ${new Buffer(fs.readFileSync(userKeystorePath)).toString('base64')}`;
+        Keystring = `Basic ${new Buffer(fs.readFileSync(userKeystorePath)).toString("base64")}`;
     }
     if (await isAuthenticated()) {
-        StatusbarUi.Online()
+        StatusbarUi.Online();
     } else {
-        StatusbarUi.Offline()
+        StatusbarUi.Offline();
     }
 }
 
 // todo: logout()
 export async function login() {
     if (await isAuthenticated()) {
-        Output(`you have already logged in as ${(await getUserProfile()).login}`, 'info');
+        Output(`you have already logged in as ${(await getUserProfile()).login}`, "info");
         return;
     }
     // todo: create uncreated folder
-    if(!fs.existsSync(join(getExtensionPath(), '/vault'))) {
+    if (!fs.existsSync(join(getExtensionPath(), "/vault"))) {
         fs.mkdirSync(keystoreDir);
     }
-    if(!fs.existsSync(keystorePath)) {
-        fs.writeFileSync(keystorePath, '');
+    if (!fs.existsSync(keystorePath)) {
+        fs.writeFileSync(keystorePath, "");
     }
     const username: string | undefined = await vscode.window.showInputBox({
         ignoreFocusOut: true,
@@ -55,52 +55,52 @@ export async function login() {
         placeHolder: "",
     });
 
-    if (!username) return;
+    if (!username) { return; }
 
     const password: string | undefined = await vscode.window.showInputBox({
         ignoreFocusOut: true,
         prompt: "type in your password or security token:",
         placeHolder: "",
-        password: true
+        password: true,
     });
 
-    StatusbarUi.Working('Loging in...');
+    StatusbarUi.Working("Loging in...");
 
-    if (!password) return;
+    if (!password) { return; }
 
-    const keystring = `${username}:${password}`
+    const keystring = `${username}:${password}`;
 
-    if (!keystring) return;
-    Keystring = `Basic ${new Buffer(keystring).toString('base64')}`;
+    if (!keystring) { return; }
+    Keystring = `Basic ${new Buffer(keystring).toString("base64")}`;
     fs.writeFileSync(keystorePath, Keystring);
     // todo: persist keystring
-    var resp;
+    let resp;
     try {
-        resp = (await request('https://api.github.com/user')).data;
+        resp = (await request("https://api.github.com/user")).data;
     } catch (e) {
-        Output(e.message, 'error')
+        Output(e.message, "error");
     }
     if (resp && resp.login) {
-        Output(`welcome, ${resp.login}`, 'info');
+        Output(`welcome, ${resp.login}`, "info");
         StatusbarUi.Online();
     }
 
 }
 
 export async function logout() {
-    Keystring = '';
+    Keystring = "";
     if (!keystorePath) {
-        throw 'keystore path not initialized!'
+        throw new Error("keystore path not initialized!");
     }
-    fs.writeFileSync(keystorePath, '');
-    Output('You have signed out.', 'info');
+    fs.writeFileSync(keystorePath, "");
+    Output("You have signed out.", "info");
     StatusbarUi.Offline();
 }
 
 export async function isAuthenticated(): Promise<boolean> {
-    var resp;
+    let resp;
     try {
-        resp = (await Axios.get('https://api.github.com/user', { headers: DefaultHeader()})).data;
+        resp = (await Axios.get("https://api.github.com/user", { headers: DefaultHeader()})).data;
     } catch (e) {
         // Output(e.message, 'error')
         return Promise.resolve(false);
@@ -112,16 +112,15 @@ export async function isAuthenticated(): Promise<boolean> {
 }
 
 export async function getUserProfile(): Promise<GithubProfile> {
-    var resp: GithubProfile;
+    let resp: GithubProfile;
     try {
-        resp = (await Axios.get('https://api.github.com/user', { headers: DefaultHeader()})).data;
+        resp = (await Axios.get("https://api.github.com/user", { headers: DefaultHeader()})).data;
     } catch (e) {
-        Output(e.message, 'error')
-        throw('please sign in to get profile!')
+        Output(e.message, "error");
+        throw new Error(("please sign in to get profile!"));
     }
     if (!resp || !resp.login) {
-        throw('please sign in to get profile!')
+        throw new Error(("please sign in to get profile!"));
     }
     return Promise.resolve(resp);
 }
-

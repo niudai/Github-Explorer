@@ -3,20 +3,19 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-
-import * as path from 'path';
-import * as vscode from 'vscode';
-import { Output } from './util/logger';
+import * as path from "path";
+import * as vscode from "vscode";
+import { Output } from "./util/logger";
 
 export class File implements vscode.FileStat {
 
-    type: vscode.FileType;
-    ctime: number;
-    mtime: number;
-    size: number;
+    public type: vscode.FileType;
+    public ctime: number;
+    public mtime: number;
+    public size: number;
 
-    name: string;
-    data?: Uint8Array;
+    public name: string;
+    public data?: Uint8Array;
 
     constructor(name: string) {
         this.type = vscode.FileType.File;
@@ -27,15 +26,16 @@ export class File implements vscode.FileStat {
     }
 }
 
+// tslint:disable-next-line: max-classes-per-file
 export class Directory implements vscode.FileStat {
 
-    type: vscode.FileType;
-    ctime: number;
-    mtime: number;
-    size: number;
+    public type: vscode.FileType;
+    public ctime: number;
+    public mtime: number;
+    public size: number;
 
-    name: string;
-    entries: Map<string, File | Directory>;
+    public name: string;
+    public entries: Map<string, File | Directory>;
 
     constructor(name: string) {
         this.type = vscode.FileType.Directory;
@@ -52,6 +52,14 @@ export type Entry = File | Directory;
 export class MemFS implements vscode.FileSystemProvider {
 
     root = new Directory('');
+    private _emitter = new vscode.EventEmitter<vscode.FileChangeEvent[]>();
+
+    readonly onDidChangeFile: vscode.Event<vscode.FileChangeEvent[]> = this._emitter.event;
+
+    // --- manage file events
+
+    private _bufferedEvents: vscode.FileChangeEvent[] = [];
+    private _fireSoonHandle?: NodeJS.Timer;
 
     // --- manage file metadata
 
@@ -161,6 +169,11 @@ export class MemFS implements vscode.FileSystemProvider {
         return;
     }
 
+    watch(_resource: vscode.Uri): vscode.Disposable {
+        // ignore, fires for all changes...
+        return new vscode.Disposable(() => { });
+    }
+
     // --- lookup
 
     private _lookup(uri: vscode.Uri, silent: false): Entry;
@@ -220,19 +233,6 @@ export class MemFS implements vscode.FileSystemProvider {
     private _lookupParentDirectory(uri: vscode.Uri): Directory {
         const dirname = uri.with({ path: path.posix.dirname(uri.path) });
         return this._lookupAsDirectory(dirname, false);
-    }
-
-    // --- manage file events
-
-    private _emitter = new vscode.EventEmitter<vscode.FileChangeEvent[]>();
-    private _bufferedEvents: vscode.FileChangeEvent[] = [];
-    private _fireSoonHandle?: NodeJS.Timer;
-
-    readonly onDidChangeFile: vscode.Event<vscode.FileChangeEvent[]> = this._emitter.event;
-
-    watch(_resource: vscode.Uri): vscode.Disposable {
-        // ignore, fires for all changes...
-        return new vscode.Disposable(() => { });
     }
 
     private _fireSoon(...events: vscode.FileChangeEvent[]): void {

@@ -1,5 +1,6 @@
 import { StatusBarItem, window, StatusBarAlignment } from 'vscode';
 import { getUserProfile } from '../loginService';
+import { CMDEnum } from '../const/CMD';
 export class StatusbarUi {
 
     private static _statusBarItem: StatusBarItem;
@@ -30,13 +31,13 @@ export class StatusbarUi {
 
     public static async Online() {
         StatusbarUi.statusbar.text = `$(github) ${(await getUserProfile()).login}`;
-        StatusbarUi.statusbar.command = 'github.logout';
+        StatusbarUi.statusbar.command = CMDEnum.logout;
         StatusbarUi.statusbar.tooltip = 'Click signout';
     }
 
     public static Offline() {
         StatusbarUi.statusbar.text = `$(github) Sign in`;
-        StatusbarUi.statusbar.command = 'github.login';
+        StatusbarUi.statusbar.command = CMDEnum.login;
         StatusbarUi.statusbar.tooltip = 'Click to sign in.';
     }
 

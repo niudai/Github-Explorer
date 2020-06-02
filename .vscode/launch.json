@@ -3,22 +3,6 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Extension",
-            "type": "extensionHost",
-            "request": "launch",
-            "runtimeExecutable": "${execPath}",
-            "args": [
-                "--disable-extensions",
-                "--extensionDevelopmentPath=${workspaceRoot}"
-            ],
-            "stopOnEntry": false,
-            "sourceMaps": true,
-            "outFiles": [
-                "${workspaceRoot}/out/src/**/*.js"
-            ],
-            "preLaunchTask": "npm: watch"
-        },
-        {
             "name": "Launch Webpack Developing",
             "type": "extensionHost",
             "request": "launch",
@@ -33,6 +17,23 @@
             //     "${workspaceRoot}/dist/**"
             // ],
             "preLaunchTask": "Run Develop"
+        },
+
+        {
+            "name": "Launch Extension",
+            "type": "extensionHost",
+            "request": "launch",
+            "runtimeExecutable": "${execPath}",
+            "args": [
+                "--disable-extensions",
+                "--extensionDevelopmentPath=${workspaceRoot}"
+            ],
+            "stopOnEntry": false,
+            "sourceMaps": true,
+            "outFiles": [
+                "${workspaceRoot}/out/src/**/*.js"
+            ],
+            "preLaunchTask": "npm: watch"
         },
 
     ]

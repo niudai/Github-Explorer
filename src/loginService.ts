@@ -49,20 +49,20 @@ export async function login() {
     if(!fs.existsSync(keystorePath)) {
         fs.writeFileSync(keystorePath, '');
     }
-    const username: string | undefined = await vscode.window.showInputBox({
+    const username: string | undefined = (await vscode.window.showInputBox({
         ignoreFocusOut: true,
         prompt: "type in your github username:",
         placeHolder: "",
-    });
+    }))?.trim();
 
     if (!username) return;
 
-    const password: string | undefined = await vscode.window.showInputBox({
+    const password: string | undefined = (await vscode.window.showInputBox({
         ignoreFocusOut: true,
         prompt: "type in your password or security token:",
         placeHolder: "",
         password: true
-    });
+    }))?.trim();
 
     StatusbarUi.Working('Loging in...');
 

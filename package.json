@@ -55,10 +55,6 @@
 		"menus": {
 			"commandPalette": [
 				{
-					"command": "remote-github.mount",
-					"when": "workbenchState != workspace"
-				},
-				{
 					"command": "remote-github.init",
 					"when": "workbenchState == workspace"
 				}

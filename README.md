@@ -9,11 +9,11 @@
 </h2>
  
 <h2 align="center">
-<a href="https://github.com/niudai/VSCode-Zhihu"> Browse Github Repositories Instantly Without Cloning</a>
+<a href="https://github.com/niudai/Github-Explorer"> Browse Github Repositories Instantly Without Cloning</a>
 </h2> 
 
-- [Why Remote - Github](#why-remote-github)
-- [How to use Remote - Github](#how-to-use-remote-github)
+- [Why Remote - Github](#why-remote---github)
+- [How to use Remote - Github](#how-to-use-remote---github)
   - [Authentication](#authentication)
     - [Provide your own keystore path](#provide-your-own-keystore-path)
   - [Setup Github To Workspace](#setup-github-to-workspace)

@@ -5,6 +5,7 @@
 
 import * as path from "path";
 import * as vscode from "vscode";
+import * as fs from "fs";
 import { Output } from "./util/logger";
 
 export class File implements vscode.FileStat {
@@ -87,6 +88,9 @@ export class MemFS implements vscode.FileSystemProvider {
     }
 
     writeFile(uri: vscode.Uri, content: Uint8Array, options: { create: boolean, overwrite: boolean }): void {
+        if (uri.scheme != 'github') {
+            fs.writeFileSync(uri.fsPath, content);
+        }
         let basename = path.posix.basename(uri.path);
         let parent = this._lookupParentDirectory(uri);
         let entry = parent.entries.get(basename);
@@ -136,6 +140,10 @@ export class MemFS implements vscode.FileSystemProvider {
     }
 
     delete(uri: vscode.Uri): void {
+        if (uri.scheme != 'github') {
+            // delete file
+            fs.unlinkSync(uri.fsPath);
+        }
         let dirname = uri.with({ path: path.posix.dirname(uri.path) });
         let basename = path.posix.basename(uri.path);
         let parent = this._lookupAsDirectory(dirname, false);
@@ -156,6 +164,9 @@ export class MemFS implements vscode.FileSystemProvider {
     createDirectory(uri: vscode.Uri): void {
         if (this._existsAsDirectory(uri, true)) {
             return;
+        }
+        if (uri.scheme != 'github') {
+            fs.mkdirSync(uri.fsPath);
         }
         let basename = path.posix.basename(uri.path);
         let dirname = uri.with({ path: path.posix.dirname(uri.path) });

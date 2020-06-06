@@ -79,6 +79,7 @@ export async function login() {
         resp = (await request('https://api.github.com/user')).data;
     } catch (e) {
         Output(e.message, 'error')
+        Output(e);
     }
     if (resp && resp.login) {
         Output(`welcome, ${resp.login}`, 'info');
@@ -100,7 +101,7 @@ export async function logout() {
 export async function isAuthenticated(): Promise<boolean> {
     var resp;
     try {
-        resp = (await Axios.get('https://api.github.com/user', { headers: DefaultHeader()})).data;
+        resp = (await Axios.get('https://api.github.com/user', { headers: DefaultHeader(), timeout: 1000})).data;
     } catch (e) {
         // Output(e.message, 'error')
         return Promise.resolve(false);

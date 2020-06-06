@@ -77,6 +77,11 @@
 					"type": "string",
 					"default": "",
 					"description": "You can provide your own keystore file path. The file must contains only <username>:<password> or <username>:<personal access token>"
+				},
+				"remote-github.mountPoint": {
+					"type": "string",
+					"default": "",
+					"description": "If provided, dynamically loaded repo would be written to here. (Please provide absolute path)"
 				}
 			}
 		}

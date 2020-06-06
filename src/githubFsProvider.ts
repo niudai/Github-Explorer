@@ -10,6 +10,10 @@ import { GithubBlob, GithubCommit, GithubRef, GithubTree, Tree, GithubTag, Githu
 import { Output } from './util/logger';
 import { request } from './util/request';
 import { SettingEnum } from './const/ENUM';
+import { join } from 'path';
+import * as path from 'path';
+import { fstat, writeSync } from 'fs';
+import * as fs from 'fs';
 
 // used to cache user query history
 var memoryRepoUrlList: string[] = [];
@@ -23,8 +27,15 @@ export async function getLimits(): Promise<GithubLimits> {
     return (await request('https://api.github.com/rate_limit')).data;
 }
 
-// todo: change defaultHeader into defaultHeader()
 export async function initGithubFS(memFs: MemFS) {
+    var isPersist = false; // to indicate whether to store it persistently
+    var tmpPath = 'github:/';
+    var mountPoint: string | undefined= vscode.workspace.getConfiguration('remote-github').get(SettingEnum.mountPoint);
+
+    if (mountPoint && mountPoint.length > 0) {
+        isPersist = true;
+        tmpPath = join(mountPoint, 'github');
+    }
 
     var queryUrl: string | undefined = await vscode.window.showInputBox({
         ignoreFocusOut: true,
@@ -41,7 +52,6 @@ export async function initGithubFS(memFs: MemFS) {
     const tagReg = /-t[\s]+([^\s]+)/;
     var matchArr;
     var repoPath: string;
-    var tmpPath = 'github:/';
     var branch: string;
     var tag: string;
     if ((matchArr = queryUrl.match(mainReg)) && matchArr.length > 2) {
@@ -59,9 +69,20 @@ export async function initGithubFS(memFs: MemFS) {
     
         // repoPathArray is like ['microsoft', 'vscode']
         let repoPathArray = repoPath.split('/');
+        if (repoPathArray.length == 1) {
+            // repoPathArray contains only username
+            
+        }
         repoPathArray.forEach(p => {
-            tmpPath = `${tmpPath}${p}/`;
-            memFs.createDirectory(vscode.Uri.parse(tmpPath));
+            if (isPersist) {
+                tmpPath = join(tmpPath, p);
+                if (!fs.existsSync(tmpPath)) {
+                    fs.mkdirSync(tmpPath, { recursive: true });
+                } 
+            } else {
+                tmpPath = `${tmpPath}${p}/`;
+                memFs.createDirectory(vscode.Uri.parse(tmpPath));
+            }
         })
         // branchArr is like ['-b master', 'mater', index: 14, input: 'microsoft/vscode -b master']
         {
@@ -115,7 +136,7 @@ export async function initGithubFS(memFs: MemFS) {
                 [{ label: '.', picked: true , item: tree.tree[0] }, {
                     label: '..', picked: false, item: tree.tree[0]
                 }].concat(tree.tree.map(t => ({ label: (t.type == 'blob') ? `📄${t.path}` : `📂${t.path}`, picked: false, item: t }))),
-                { placeHolder: tmpPath,ignoreFocusOut: true  }
+                { placeHolder: tmpPath, ignoreFocusOut: true  }
             );
             
             if (!selectedItem) return
@@ -123,24 +144,46 @@ export async function initGithubFS(memFs: MemFS) {
             if (selectedItem.label == '.') {
                 break;
             } else if (selectedItem.label == '..') {
-                memFs.delete(vscode.Uri.parse(tmpPath));
+                if (isPersist) {
+                    if (fs.existsSync(tmpPath)) {
+                        fs.rmdirSync(tmpPath);
+                    }
+                } else {
+                    memFs.delete(vscode.Uri.parse(tmpPath));
+                }
                 if (tree.parent) {
                     tree = tree.parent;
-                    tmpPath = tmpPath.slice(0, tmpPath.length-1);
-                    tmpPath = tmpPath.slice(0, tmpPath.lastIndexOf('/') + 1);    
+                    if (tmpPath.endsWith(path.sep)) {
+                        tmpPath = tmpPath.slice(0, tmpPath.length-1);
+                    }
+                    tmpPath = tmpPath.slice(0, tmpPath.lastIndexOf(path.sep) + 1);        
                 };
             } else if (selectedItem.item?.type == 'blob') {
-                tmpPath = `${tmpPath}${selectedItem.item.path}`;
+                if (isPersist) {
+                    tmpPath = join(tmpPath, selectedItem.item.path);
+                } else {
+                    tmpPath = `${tmpPath}${selectedItem.item.path}`;
+                }
                 request(selectedItem.item.url).then(r => {
                     let blob: GithubBlob = r.data;
                     let buf = Buffer.from(blob.content, 'base64');
-                    memFs.writeFile(vscode.Uri.parse(tmpPath), buf, { create: true, overwrite: true });
+                    if (isPersist) {
+                        fs.writeFileSync(tmpPath, buf);
+                    } else {
+                        memFs.writeFile(vscode.Uri.parse(tmpPath), buf, { create: true, overwrite: true });
+                    }
                 })
                 return;
             } else if (selectedItem.item?.type == 'tree') {
-                tmpPath = `${tmpPath}${selectedItem.item.path}/`;
-                memFs.createDirectory(vscode.Uri.parse(tmpPath));
-                    // if tree, load tree again
+                if (isPersist) {
+                    tmpPath = join(tmpPath, selectedItem.item.path);
+                    if (!fs.existsSync(tmpPath)) {
+                        fs.mkdirSync(tmpPath);
+                    }
+                } else {
+                    tmpPath = `${tmpPath}${selectedItem.item.path}/`;
+                    memFs.createDirectory(vscode.Uri.parse(tmpPath));
+                }  // if tree, load tree again
                 var oldTree = tree;
                 tree = (await request(selectedItem.item.url)).data;
                 tree.parent = oldTree;
@@ -175,7 +218,11 @@ export async function initGithubFS(memFs: MemFS) {
                     request(t.url).then(r => {
                         let blob: GithubBlob = r.data;
                         let buf = Buffer.from(blob.content, 'base64');
-                        memFs.writeFile(vscode.Uri.parse(`${rootPath}${fname}`), buf, { create: true, overwrite: true });
+                        if (isPersist) {
+                            fs.writeFileSync(join(rootPath, fname), buf);
+                        } else {
+                            memFs.writeFile(vscode.Uri.parse(`${rootPath}${fname}`), buf, { create: true, overwrite: true });
+                        }
                     }).catch(async e => {
                         let limits = await getLimits();
                         if (limits.resources.core.limit == 0) {
@@ -185,21 +232,28 @@ export async function initGithubFS(memFs: MemFS) {
                         }
                     })
                 } else if (t.type == 'tree') {
-                    let folderPath;
+                    let folderPath: string;
                     // if (rootPath == '' || !rootPath) {
                     //     folderPath = `${rootPath}${t.path}/`;
                     // } else {
-                    folderPath = `${rootPath}${t.path}/`;
                     // }
-                    memFs.createDirectory(vscode.Uri.parse(folderPath));
+                    if (isPersist) {
+                        folderPath = join(rootPath, t.path);
+                        if (!fs.existsSync(folderPath)) {
+                            fs.mkdirSync(folderPath);
+                        }
+                    } else {
+                        folderPath = `${rootPath}${t.path}/`;
+                        memFs.createDirectory(vscode.Uri.parse(folderPath));
+                    }
                     if (useSyncLoad) {
                         let r = (await request(t.url)).data;
                         let tree: GithubTree = r;
-                        await _writeTree(tree, `${rootPath}${t.path}/`);    
+                        await _writeTree(tree, folderPath);    
                     } else {
                         request(t.url).then(r => {
                             let tree: GithubTree = r.data;
-                            _writeTree(tree, `${rootPath}${t.path}/`);
+                            _writeTree(tree, folderPath);
                         })    
                     }
                 }

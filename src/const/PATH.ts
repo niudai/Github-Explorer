@@ -1,0 +1,1 @@
+export const ReleaseNotesPath = "release_notes";

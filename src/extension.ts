@@ -8,10 +8,15 @@ import { login, loadKeyString, logout } from './loginService';
 import { SettingEnum } from './const/ENUM';
 import * as path from 'path'; 
 import * as fs from 'fs';
+import { showReleaseNote } from './release-notes';
 
 export function activate(context: vscode.ExtensionContext) {
 
     setContext(context);
+
+    // show release note
+    showReleaseNote();
+
     loadKeyString();
     const githubFs = new MemFS();
     context.subscriptions.push(vscode.workspace.registerFileSystemProvider('github', githubFs, { isCaseSensitive: true }));

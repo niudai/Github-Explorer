@@ -64,7 +64,7 @@ export async function login() {
         password: true
     }))?.trim();
 
-    StatusbarUi.Working('Loging in...');
+    StatusbarUi.Working('Logging in...');
 
     if (!password) return;
 

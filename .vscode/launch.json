@@ -18,23 +18,5 @@
             // ],
             "preLaunchTask": "Run Develop"
         },
-
-        {
-            "name": "Launch Extension",
-            "type": "extensionHost",
-            "request": "launch",
-            "runtimeExecutable": "${execPath}",
-            "args": [
-                "--disable-extensions",
-                "--extensionDevelopmentPath=${workspaceRoot}"
-            ],
-            "stopOnEntry": false,
-            "sourceMaps": true,
-            "outFiles": [
-                "${workspaceRoot}/out/src/**/*.js"
-            ],
-            "preLaunchTask": "npm: watch"
-        },
-
     ]
 }

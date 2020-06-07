@@ -6,7 +6,7 @@
 
 import * as vscode from 'vscode';
 import { MemFS } from './fileSystemProvider';
-import { GithubBlob, GithubCommit, GithubRef, GithubTree, Tree, GithubTag, GithubLimits } from './type/github';
+import { GithubBlob, GithubCommit, GithubRef, GithubTree, Tree, GithubTag, GithubLimits, GithubRepo, GithubSearchRepo } from './type/github';
 import { Output } from './util/logger';
 import { request } from './util/request';
 import { SettingEnum } from './const/ENUM';
@@ -67,13 +67,22 @@ export async function initGithubFS(memFs: MemFS) {
             }    
         }
     
-        // repoPathArray is like ['microsoft', 'vscode']
-        let repoPathArray = repoPath.split('/');
+        let repoPathArray: string[] | undefined = repoPath.split('/');
         if (repoPathArray.length == 1) {
             // repoPathArray contains only username
-            
+            var repoList: GithubSearchRepo = (await request(`https://api.github.com/search/repositories?q=${repoPathArray[0]}`)).data;
+            var searchPromise = vscode.window.showQuickPick<vscode.QuickPickItem & { item: GithubRepo}>(
+                repoList.items.map(t => ({ label: t.name, picked: false, item: t, description: t.description })),
+                { placeHolder: `${repoPathArray[0]}/`, ignoreFocusOut: true  }
+            );
+
+            const selectedItem = await searchPromise
+            if (!selectedItem) return;
+            repoPathArray = selectedItem.item?.full_name.split('/');
+            repoPath = selectedItem.item.full_name;
         }
-        repoPathArray.forEach(p => {
+        // repoPathArray is like ['microsoft', 'vscode']
+        repoPathArray?.forEach(p => {
             if (isPersist) {
                 tmpPath = join(tmpPath, p);
                 if (!fs.existsSync(tmpPath)) {
@@ -102,7 +111,7 @@ export async function initGithubFS(memFs: MemFS) {
     vscode.window.withProgress({
         location: vscode.ProgressLocation.Notification,
         title: 'Building Virtual FileSystem From Github...Just secs...'
-    }, async () => {
+    }, async (progress, token) => {
         var repoUrl: string;
         if (branch) {
             repoUrl = `https://api.github.com/repos/${repoPath}/git/ref/heads/${branch}`;
@@ -173,6 +182,9 @@ export async function initGithubFS(memFs: MemFS) {
                         memFs.writeFile(vscode.Uri.parse(tmpPath), buf, { create: true, overwrite: true });
                     }
                 })
+                progress.report({
+                    message: `Writing ${tmpPath}`
+                })
                 return;
             } else if (selectedItem.item?.type == 'tree') {
                 if (isPersist) {
@@ -184,6 +196,10 @@ export async function initGithubFS(memFs: MemFS) {
                     tmpPath = `${tmpPath}${selectedItem.item.path}/`;
                     memFs.createDirectory(vscode.Uri.parse(tmpPath));
                 }  // if tree, load tree again
+                progress.report({
+                    message: `Loading ${tmpPath} folder`,
+                    increment: 1
+                })
                 var oldTree = tree;
                 tree = (await request(selectedItem.item.url)).data;
                 tree.parent = oldTree;

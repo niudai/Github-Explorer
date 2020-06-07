@@ -18,6 +18,8 @@
     - [Provide your own keystore path](#provide-your-own-keystore-path)
   - [Setup Github To Workspace](#setup-github-to-workspace)
   - [Open Repository](#open-repository)
+  - [Enable VS Code Full Feature Set By Providing Mount Point](#enable-vs-code-full-feature-set-by-providing-mount-point)
+  - [Repository Searching](#repository-searching)
   - [Namespaces](#namespaces)
   - [Save As Local Files](#save-as-local-files)
   - [Open Different Snapshot](#open-different-snapshot)
@@ -107,6 +109,31 @@ Instead of cloning the whole big git repository, you could just open one subfold
 
 Open one file is also ok. You can try it out.
 
+### Enable VS Code Full Feature Set By Providing Mount Point
+
+VS Code supports **Intellisense**, **Code Navigation**, **File Searching**, etc. Browing code would be much easier with these amazing features, but people find they cannot do this with files loaded by *Remote - Github*. 
+
+It is because *Remote - Github* stores them to memory, namely, virtual file system first, so the vscode could not analyze it, neither do other tools like `npm`, `maven`, etc.
+
+*Remote - Github* now gives you a choice to enable all these features by writing loaded files to your local fs. It's really simple, all you need is provide a "mount point" (just an absolute path to store the whole *github* folder):
+
+![Image](https://pic4.zhimg.com/80/v2-901592099811a0179a28df76710c29d8.png)
+
+Once the mount point is provided, all loaded file would be written to a newly created `github` folder under your mount point, and everything works just like before except that vscode features are enabled.
+
+After that, you could find anything in your local github folder, and you can compile it, modify and save it, and run it.
+
+### Repository Searching
+
+In 0.1, if you want to open `vscode` repo, you need to input `https://github.com/microsoft/vscode`. To do this, you have to open github and find this repo, paste link to *Remote-Github*.
+
+With *Repository Searching*, all you have to do it provide a single keyword like "vscode", and *Remote-Github* would provide you several searching results for you to pick:
+
+![Image](https://pic4.zhimg.com/80/v2-58de08328148776bbafe7c27939c03bb.png)
+
+This would not break the old behavior, if you provide full link, everything works like in 0.1.
+
+
 ### Namespaces
 
 The namespaces of file are dealt with gracefully, open mutiple repos would not conflict with each other:
@@ -163,4 +190,5 @@ Open big repository like `torvalds/linux`, `microsoft/vscode` from root folder w
 | :-------------: |:-------------:| 
 | Remote - Github: Max Request Times Per Open  | The max number of request time every repo opening. If set too large, nework & performance issues may occur. |
 |Github: Use Sync Load    | Asynchronous https requesting would make repo loading faster, but prone to be detected as robot. Set this true makes loading synchronous, which would slower loading process, but makes it more robust to robot detection.     | 
-| Remote - Github: Keystore Path | Instead of type in username and authentication string manually, you can provide the absolute path of your own file which contains \<username\>:\<password\> or \<username\>:\<private access token\>.
+| Remote - Github: Keystore Path | Instead of type in username and authentication string manually, you can provide the absolute path of your own file which contains \<username\>:\<password\> or \<username\>:\<private access token\>. |
+| Remote - Github: Mount Point | If provided, dynamically loaded repo would be written to here. (Please provide absolute path) |

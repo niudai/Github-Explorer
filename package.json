@@ -2,7 +2,7 @@
 	"name": "remote-github",
 	"displayName": "Remote - Github",
 	"description": "Open any folder of any remote Github Repository and take advantage of Visual Studio Code's full feature set.",
-	"version": "0.1.2",
+	"version": "0.2.0",
 	"publisher": "niudai",
 	"preview": true,
 	"keywords": [

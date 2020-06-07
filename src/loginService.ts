@@ -27,7 +27,7 @@ export async function loadKeyString() {
     if (!userKeystorePath || userKeystorePath.length == 0) {
         Keystring = fs.readFileSync(keystorePath, { encoding: 'utf8'});
     } else {
-        Keystring = `Basic ${new Buffer(fs.readFileSync(userKeystorePath)).toString('base64')}`;
+        Keystring = `Basic ${new Buffer(fs.readFileSync(userKeystorePath).toString().trim()).toString('base64')}`;
     }
     if (await isAuthenticated()) {
         StatusbarUi.Online()

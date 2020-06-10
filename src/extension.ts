@@ -9,6 +9,7 @@ import { SettingEnum } from './const/ENUM';
 import * as path from 'path'; 
 import * as fs from 'fs';
 import { showReleaseNote } from './release-notes';
+import { createRepo } from './createRepo';
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -31,6 +32,10 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(vscode.commands.registerCommand('remote-github.init', _ => {
         initGithubFS(githubFs);
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand('remote-github.createRepo', _ => {
+        createRepo();
     }));
 
     context.subscriptions.push(vscode.commands.registerCommand('remote-github.mount', _ => {

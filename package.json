@@ -23,6 +23,7 @@
 	"activationEvents": [
 		"onFileSystem:github",
 		"onCommand:remote-github.mount",
+		"onCommand:remote-github.createRepo",
 		"onCommand:remote-github.init",
 		"onCommand:remote-github.login",
 		"onCommand:remote-github.logout"
@@ -49,6 +50,11 @@
 			{
 				"command": "remote-github.logout",
 				"title": "Sign out from Github",
+				"category": "Remote - Github"
+			},
+			{
+				"command": "remote-github.createRepo",
+				"title": "Create Remote Github Repository",
 				"category": "Remote - Github"
 			}
 		],

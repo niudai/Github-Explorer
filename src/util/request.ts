@@ -4,14 +4,17 @@ import { DefaultHeader } from "../const/HTTP";
 import { Output } from "./logger";
 import * as process from 'process';
 
-export async function request(uri: string, method?: string, headers?: string): Promise<AxiosResponse<any>> {
+export async function request(uri: string, config?: axios.AxiosRequestConfig): Promise<AxiosResponse<any>> {
     
     var resp: AxiosResponse<any>;
     try {
-        resp = await axios.default.get(uri, {
-            headers: DefaultHeader(),
-            proxy: false
-        })    
+        if (!config) {
+            config = {};
+        }
+        if (!config.headers) {
+            config.headers = DefaultHeader();
+        }
+        resp = await axios.default(uri, config)    
     } catch (e) {
         Output(e.message);
         Output(`request to ${uri} failed because "${e.response.data.message}"`);

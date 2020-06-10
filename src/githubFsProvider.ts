@@ -14,6 +14,7 @@ import { join } from 'path';
 import * as path from 'path';
 import { fstat, writeSync } from 'fs';
 import * as fs from 'fs';
+import { isAuthenticated } from './loginService';
 
 // used to cache user query history
 var memoryRepoUrlList: string[] = [];
@@ -28,6 +29,12 @@ export async function getLimits(): Promise<GithubLimits> {
 }
 
 export async function initGithubFS(memFs: MemFS) {
+    if (!(await isAuthenticated())) {
+        Output('Please Sign in first!', 'info');
+        await vscode.commands.executeCommand('remote-github.login');
+        return;
+    } 
+
     var isPersist = false; // to indicate whether to store it persistently
     var tmpPath = 'github:/';
     var mountPoint: string | undefined= vscode.workspace.getConfiguration('remote-github').get(SettingEnum.mountPoint);

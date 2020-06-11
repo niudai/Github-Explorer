@@ -15,6 +15,7 @@ import * as path from 'path';
 import { fstat, writeSync } from 'fs';
 import * as fs from 'fs';
 import { isAuthenticated } from './loginService';
+import { getGlobalState } from './util/global';
 
 // used to cache user query history
 var memoryRepoUrlList: string[] = [];
@@ -158,6 +159,8 @@ export async function initGithubFS(memFs: MemFS) {
             if (!selectedItem) return
             
             if (selectedItem.label == '.') {
+                // remember opening path
+                getGlobalState().update(repoPath, tree);
                 break;
             } else if (selectedItem.label == '..') {
                 if (isPersist) {

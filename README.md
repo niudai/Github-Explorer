@@ -23,6 +23,7 @@
   - [Namespaces](#namespaces)
   - [Save As Local Files](#save-as-local-files)
   - [Open Different Snapshot](#open-different-snapshot)
+  - [Create Remote Github Repository In VS Code](#create-remote-github-repository-in-vs-code)
   - [Limits](#limits)
   - [Design Philosophy](#design-philosophy)
 - [Configurations](#configurations)
@@ -171,6 +172,40 @@ If you want to open `v5.6` tag of `torvalds/linux`:
 ```
 torvalds/linux -t v5.6
 ```
+
+### Create Remote Github Repository In VS Code
+
+In order to set up a remote repo, usually we need to open browser and create a repo in github manually, and then push the local repo to it.
+
+With *Remote - Github*, you can create remote github repo right in VS Code and sync with your local repo automatically.
+
+Just invoke `Remote - Github: Create Remote Github Repository` command, and input the repo name and description:
+
+![Image](https://pic4.zhimg.com/80/v2-65e114b72bb505de0e3b9bbd4bd602e0.png)
+
+![Image](https://pic4.zhimg.com/80/v2-d845f3f85f5f2ff905532d836ad08b22.png)
+
+select repo type, public or private:
+
+![Image](https://pic4.zhimg.com/80/v2-fc62124249f61bfc1d74120ada1bfaa1.png)
+
+Wait a sec, the repo would be created:
+
+![Image](https://pic4.zhimg.com/80/v2-bb92fd4ff18b95f3c5040b02c400ae91.png)
+
+click `see it` to see the repo in browser:
+
+![Image](https://pic4.zhimg.com/80/v2-65ff536d710b9b585dd76262b25c4121.png)
+
+Once repo is created, *Remote - Github* would open a new terminal, and run several commands to set up your local repo to sync with your remote repo:
+
+```
+git init
+git remote add origin https://github.com/<username>/<reponame>
+git push -u origin master
+```
+
+Notice that `git init` would have no effect if your local repo has already set up git. Just don't worry it.
 
 ### Limits
 

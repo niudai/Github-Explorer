@@ -1,7 +1,7 @@
 out
 node_modules
 *.log
-**/*.js
+src/**/*.js
 /vault
 *.pdf
 *.vsix

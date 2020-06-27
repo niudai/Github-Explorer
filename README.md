@@ -1,8 +1,8 @@
 <h1 align="center"> Remote - Github </h1>
 
-[![](https://vsmarketplacebadge.apphb.com/version-short/niudai.remote-github.svg)](https://marketplace.visualstudio.com/items?itemName=niudai.vscode-zhihu)
-[![](https://vsmarketplacebadge.apphb.com/downloads-short/niudai.remote-github.svg)](https://marketplace.visualstudio.com/items?itemName=niudai.vscode-zhihu)
-[![](https://vsmarketplacebadge.apphb.com/rating-short/niudai.remote-github.svg)](https://marketplace.visualstudio.com/items?itemName=niudai.vscode-zhihu)
+[![](https://vsmarketplacebadge.apphb.com/version-short/niudai.remote-github.svg)](https://marketplace.visualstudio.com/items?itemName=niudai.remote-github)
+[![](https://vsmarketplacebadge.apphb.com/downloads-short/niudai.remote-github.svg)](https://marketplace.visualstudio.com/items?itemName=niudai.remote-github)
+[![](https://vsmarketplacebadge.apphb.com/rating-short/niudai.remote-github.svg)](https://marketplace.visualstudio.com/items?itemName=niudai.remote-github)
 
 <h2 align="center" margin="auto 0">
   <img src="https://pic4.zhimg.com/80/v2-5fb9e9776207d111993e3460f3bf6b11.png" alt="vscode-zhihu logo" width="200px" /></a>
